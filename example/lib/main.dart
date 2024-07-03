@@ -21,8 +21,6 @@ class MyApp extends StatelessWidget {
                   children: [
                     SizedBox(height: 50.h),
                     VoiceMessageView(
-                      currentPlaying: "30",
-                      uniqueTag: "30",
                       controller: VoiceController(
                         audioSrc:
                             'https://dl.solahangs.com/Music/1403/02/H/128/Hiphopologist%20-%20Shakkak%20%28128%29.mp3',
@@ -45,8 +43,6 @@ class MyApp extends StatelessWidget {
                       cornerRadius: 20,
                     ),
                     VoiceMessageView(
-                      currentPlaying: "30",
-                      uniqueTag: "50",
                       controller: VoiceController(
                         audioSrc:
                         'https://dl.solahangs.com/Music/1403/02/H/128/Hiphopologist%20-%20Shakkak%20%28128%29.mp3',

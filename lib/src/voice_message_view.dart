@@ -14,44 +14,42 @@ import 'package:voice_message_package/src/widgets/play_pause_button.dart';
 class VoiceMessageView extends StatelessWidget {
   const VoiceMessageView(
       {Key? key,
-      required this.controller,
-      required this.uniqueTag,
-      required this.currentPlaying,
-      this.backgroundColor = Colors.white,
-      this.activeSliderColor = Colors.red,
-      this.notActiveSliderColor,
-      this.circlesColor = Colors.red,
-      this.innerPadding = 12,
-      this.cornerRadius = 20,
-      // this.playerWidth = 170,
-      this.size = 38,
-      this.refreshIcon = const Icon(
-        Icons.refresh,
-        color: Colors.white,
-      ),
-      this.pauseIcon = const Icon(
-        Icons.pause_rounded,
-        color: Colors.white,
-      ),
-      this.playIcon = const Icon(
-        Icons.play_arrow_rounded,
-        color: Colors.white,
-      ),
-      this.stopDownloadingIcon = const Icon(
-        Icons.close,
-        color: Colors.white,
-      ),
-      this.playPauseButtonDecoration,
-      this.circlesTextStyle = const TextStyle(
-        color: Colors.white,
-        fontSize: 10,
-        fontWeight: FontWeight.bold,
-      ),
-      this.counterTextStyle = const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w500,
-      ),
-      this.playPauseButtonLoadingColor = Colors.white})
+        required this.controller,
+        this.backgroundColor = Colors.white,
+        this.activeSliderColor = Colors.red,
+        this.notActiveSliderColor,
+        this.circlesColor = Colors.red,
+        this.innerPadding = 12,
+        this.cornerRadius = 20,
+        // this.playerWidth = 170,
+        this.size = 38,
+        this.refreshIcon = const Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
+        this.pauseIcon = const Icon(
+          Icons.pause_rounded,
+          color: Colors.white,
+        ),
+        this.playIcon = const Icon(
+          Icons.play_arrow_rounded,
+          color: Colors.white,
+        ),
+        this.stopDownloadingIcon = const Icon(
+          Icons.close,
+          color: Colors.white,
+        ),
+        this.playPauseButtonDecoration,
+        this.circlesTextStyle = const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+        this.counterTextStyle = const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+        ),
+        this.playPauseButtonLoadingColor = Colors.white})
       : super(key: key);
 
   /// The controller for the voice message view.
@@ -101,10 +99,6 @@ class VoiceMessageView extends StatelessWidget {
 
   /// The loading Color of the play/pause button.
   final Color playPauseButtonLoadingColor;
-
-  final String uniqueTag;
-
-  final String currentPlaying;
 
   @override
 
@@ -180,80 +174,80 @@ class VoiceMessageView extends StatelessWidget {
   }
 
   SizedBox _noises(ThemeData newTHeme) => SizedBox(
-        height: 30,
-        width: controller.noiseWidth,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            /// noises
-            Noises(
-              rList: controller.randoms!,
-              activeSliderColor: activeSliderColor,
-            ),
+    height: 30,
+    width: controller.noiseWidth,
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        /// noises
+        Noises(
+          rList: controller.randoms!,
+          activeSliderColor: activeSliderColor,
+        ),
 
-            /// slider
-            AnimatedBuilder(
-              animation: CurvedAnimation(
-                parent: controller.animController,
-                curve: Curves.ease,
-              ),
-              builder: (BuildContext context, Widget? child) {
-                return Positioned(
-                  left: controller.animController.value,
-                  child: Container(
-                    width: controller.noiseWidth,
-                    height: 6.w(),
-                    color:
-                        notActiveSliderColor ?? backgroundColor.withOpacity(.4),
-                  ),
-                );
-              },
-            ),
-            Opacity(
-              opacity: 0,
+        /// slider
+        AnimatedBuilder(
+          animation: CurvedAnimation(
+            parent: controller.animController,
+            curve: Curves.ease,
+          ),
+          builder: (BuildContext context, Widget? child) {
+            return Positioned(
+              left: controller.animController.value,
               child: Container(
                 width: controller.noiseWidth,
-                color: Colors.transparent.withOpacity(1),
-                child: Theme(
-                  data: newTHeme,
-                  child: Slider(
-                    value: controller.currentMillSeconds,
-                    max: controller.maxMillSeconds,
-                    onChangeStart: controller.onChangeSliderStart,
-                    onChanged: controller.onChanging,
-                    onChangeEnd: (value) {
-                      controller.onSeek(
-                        Duration(milliseconds: value.toInt()),
-                      );
-                      controller.play();
-                    },
-                  ),
-                ),
+                height: 6.w(),
+                color:
+                notActiveSliderColor ?? backgroundColor.withOpacity(.4),
               ),
-            ),
-          ],
-        ),
-      );
-
-  Transform _changeSpeedButton(Color color) => Transform.translate(
-        offset: const Offset(0, -7),
-        child: GestureDetector(
-          onTap: () {
-            controller.changeSpeed();
+            );
           },
+        ),
+        Opacity(
+          opacity: 0,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              controller.speed.playSpeedStr,
-              style: circlesTextStyle,
+            width: controller.noiseWidth,
+            color: Colors.transparent.withOpacity(1),
+            child: Theme(
+              data: newTHeme,
+              child: Slider(
+                value: controller.currentMillSeconds,
+                max: controller.maxMillSeconds,
+                onChangeStart: controller.onChangeSliderStart,
+                onChanged: controller.onChanging,
+                onChangeEnd: (value) {
+                  controller.onSeek(
+                    Duration(milliseconds: value.toInt()),
+                  );
+                  controller.play();
+                },
+              ),
             ),
           ),
         ),
-      );
+      ],
+    ),
+  );
+
+  Transform _changeSpeedButton(Color color) => Transform.translate(
+    offset: const Offset(0, -7),
+    child: GestureDetector(
+      onTap: () {
+        controller.changeSpeed();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          controller.speed.playSpeedStr,
+          style: circlesTextStyle,
+        ),
+      ),
+    ),
+  );
 }
 
 ///
