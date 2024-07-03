@@ -301,7 +301,6 @@ class VoiceController extends MyTicker {
   }
 }
 
-
 class MyTicker extends TickerProvider {
   @override
   Ticker createTicker(TickerCallback onTick) {
