@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
                       currentPlaying: "30",
                       uniqueTag: "30",
                       controller: VoiceController(
-                        uniqueTag: "30",
                         audioSrc:
                             'https://dl.solahangs.com/Music/1403/02/H/128/Hiphopologist%20-%20Shakkak%20%28128%29.mp3',
                         maxDuration: const Duration(seconds: 10),
@@ -49,7 +48,6 @@ class MyApp extends StatelessWidget {
                       currentPlaying: "30",
                       uniqueTag: "50",
                       controller: VoiceController(
-                        uniqueTag: "50",
                         audioSrc:
                         'https://dl.solahangs.com/Music/1403/02/H/128/Hiphopologist%20-%20Shakkak%20%28128%29.mp3',
                         maxDuration: const Duration(seconds: 10),

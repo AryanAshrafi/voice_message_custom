@@ -137,7 +137,6 @@ class VoiceMessageView extends StatelessWidget {
             children: [
               /// play pause button
               PlayPauseButton(
-                uniqueTag: uniqueTag,
                 controller: controller,
                 color: color,
                 loadingColor: playPauseButtonLoadingColor,
@@ -147,7 +146,6 @@ class VoiceMessageView extends StatelessWidget {
                 playIcon: playIcon,
                 stopDownloadingIcon: stopDownloadingIcon,
                 buttonDecoration: playPauseButtonDecoration,
-                currentPlaying: currentPlaying,
               ),
 
               ///

@@ -10,6 +10,8 @@ import 'package:voice_message_package/src/helpers/play_status.dart';
 import 'package:voice_message_package/src/helpers/utils.dart';
 
 class VoiceController extends MyTicker {
+  static VoiceController? _currentPlayingController;
+
   final String audioSrc;
   late Duration maxDuration;
   Duration currentDuration = Duration.zero;
@@ -30,50 +32,6 @@ class VoiceController extends MyTicker {
   StreamSubscription? playerStateStream;
   double? downloadProgress = 0;
   final int noiseCount;
-  final String uniqueTag;
-
-  static Map<String, VoiceController> _controllers = {};
-
-  VoiceController({
-    required this.audioSrc,
-    required this.maxDuration,
-    required this.isFile,
-    required this.onComplete,
-    required this.onPause,
-    required this.onPlaying,
-    required this.uniqueTag,
-    this.noiseCount = 24,
-    this.onError,
-    this.randoms,
-    this.cacheKey,
-  }) {
-    if (randoms?.isEmpty ?? true) _setRandoms();
-    animController = AnimationController(
-      vsync: this,
-      upperBound: noiseWidth,
-      duration: maxDuration,
-    );
-    init();
-    _listenToRemindingTime();
-    _listenToPlayerState();
-    _registerController();
-  }
-
-  static void registerController(String uniqueTag, VoiceController controller) {
-    _controllers[uniqueTag] = controller;
-  }
-
-  static void pauseController(String uniqueTag) {
-    if (_controllers.containsKey(uniqueTag)) {
-      _controllers[uniqueTag]?.pausePlaying();
-    } else {
-      print('Controller with unique tag $uniqueTag not found.');
-    }
-  }
-
-  void _registerController() {
-    registerController(uniqueTag, this);
-  }
 
   double get currentMillSeconds {
     final c = currentDuration.inMilliseconds.toDouble();
@@ -101,12 +59,41 @@ class VoiceController extends MyTicker {
 
   StreamSubscription<FileResponse>? downloadStreamSubscription;
 
+  VoiceController({
+    required this.audioSrc,
+    required this.maxDuration,
+    required this.isFile,
+    required this.onComplete,
+    required this.onPause,
+    required this.onPlaying,
+    this.noiseCount = 24,
+    this.onError,
+    this.randoms,
+    this.cacheKey,
+  }) {
+    if (randoms?.isEmpty ?? true) _setRandoms();
+    animController = AnimationController(
+      vsync: this,
+      upperBound: noiseWidth,
+      duration: maxDuration,
+    );
+    init();
+    _listenToRemindingTime();
+    _listenToPlayerState();
+  }
+
   Future init() async {
     await setMaxDuration(audioSrc);
     _updateUi();
   }
 
   Future play() async {
+    if (VoiceController._currentPlayingController != null &&
+        VoiceController._currentPlayingController != this) {
+      await VoiceController._currentPlayingController!.stopPlaying();
+    }
+    VoiceController._currentPlayingController = this;
+
     try {
       playStatus = PlayStatus.downloading;
       _updateUi();
@@ -178,7 +165,6 @@ class VoiceController extends MyTicker {
     positionStream?.cancel();
     playerStateStream?.cancel();
     animController.dispose();
-    _controllers.remove(uniqueTag);
   }
 
   void onSeek(Duration duration) {
@@ -221,12 +207,6 @@ class VoiceController extends MyTicker {
   void _listenToPlayerState() {
     playerStateStream = _player.playerStateStream.listen((event) async {
       if (event.processingState == ProcessingState.completed) {
-        // await _player.stop();
-        // currentDuration = Duration.zero;
-        // playStatus = PlayStatus.init;
-        // animController.reset();
-        // _updateUi();
-        // onComplete(id);
       } else if (event.playing) {
         playStatus = PlayStatus.playing;
         _updateUi();
@@ -239,12 +219,21 @@ class VoiceController extends MyTicker {
       case PlaySpeed.x1:
         speed = PlaySpeed.x1_5;
         break;
+      // case PlaySpeed.x1_25:
+      //   speed = PlaySpeed.x1_5;
+      //   break;
       case PlaySpeed.x1_5:
         speed = PlaySpeed.x2;
         break;
+      // case PlaySpeed.x1_75:
+      //   speed = PlaySpeed.x2;
+      //   break;
       case PlaySpeed.x2:
         speed = PlaySpeed.x1;
         break;
+      // case PlaySpeed.x2_25:
+      //   speed = PlaySpeed.x1;
+      //   break;
     }
     _player.setSpeed(speed.getSpeed);
     _updateUi();
